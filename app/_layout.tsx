@@ -1,39 +1,56 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import React from "react";
+import { Text, SafeAreaView, ScrollView, StyleSheet } from "react-native";
+import { useFonts } from "expo-font";
+import { Righteous_400Regular } from "@expo-google-fonts/righteous";
+import { StalinistOne_400Regular } from "@expo-google-fonts/stalinist-one";
+import Navbar from "../components/navbar";
+import Hero from "../components/hero";
+import Footer from "../components/footer";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+export default function Layout() {
+  const [fontsLoaded] = useFonts({
+    Righteous: Righteous_400Regular,
+    StalinistOne: StalinistOne_400Regular,
+    TIDOEmoji: require("../assets/fonts/TIDOemoji.otf"), // Correctly load the custom TIDOEmoji font
   });
 
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
+  if (!fontsLoaded) {
+    return <Text>Loading...</Text>; // If fonts are still loading
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.contentWrapper}>
+        <Navbar />
+        <Hero />
+        <Footer />
+      </ScrollView>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#1B1B1B",
+  },
+  contentWrapper: {
+    flexGrow: 1,
+  },
+  title: {
+    fontFamily: "Righteous", // Use the loaded Righteous font
+    fontSize: 50,
+    color: "#fff",
+  },
+  subtitle: {
+    fontFamily: "StalinistOne", // Use the loaded StalinistOne font
+    fontSize: 18,
+    color: "#fff",
+    textAlign: "center",
+  },
+  emojiText: {
+    fontFamily: "TIDOEmoji", // Use the loaded TIDOEmoji font
+    fontSize: 100, // Adjust size for emojis if needed
+    color: "#fff",
+  },
+});
