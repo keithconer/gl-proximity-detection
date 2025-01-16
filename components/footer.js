@@ -13,12 +13,13 @@ const styles = StyleSheet.create({
   footer: {
     marginTop: 'auto',
     paddingBottom: 10,
-    textAlign: 'center',
+    // Remove textAlign from here as it's not effective for View components
   },
   footerText: {
     color: 'white',
     fontSize: 12,
-    opacity: 0.5,
+    opacity: 0.7,
+    textAlign: 'center', // Correctly apply textAlign to Text component
   },
 });
 

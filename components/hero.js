@@ -8,7 +8,7 @@ const Hero = () => {
       <Text style={styles.heroTitle}>Salamin.</Text>
       <Text style={styles.heroSubtitle}>T</Text>
       <Text style={styles.heroDescription}>
-        Development of an IoT-based Smart Eyeglasses Locator System Using ESP32 and BLE Technology.
+        Pair your device to trigger the buzzer.
       </Text>
 
       <View style={styles.buttonContainer}>
@@ -51,17 +51,20 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 15,
+    flexDirection: 'column', // Stack the buttons vertically
+    width: '100%', // Make the container take the full width
+    paddingHorizontal: 15, // Add horizontal padding for better spacing
+    marginBottom: 20, // Optional: Add margin at the bottom
   },
   button: {
     backgroundColor: '#C2185B',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 15, // Add more vertical padding to make buttons larger
     borderRadius: 30,
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 10, // Space between buttons
+    width: '100%', // Full width for each button
+    justifyContent: 'center', // Center the content inside the button
   },
   buttonText: {
     color: 'white',
