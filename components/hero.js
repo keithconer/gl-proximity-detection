@@ -25,7 +25,6 @@ const Hero = () => {
   const handleScan = async () => {
     if (!isScanning) {
       setIsScanning(true)
-      setModalMessage("Scanning...")
       setModalVisible(true)
 
       if (Platform.OS === "android" && Platform.Version >= 23) {
@@ -39,24 +38,14 @@ const Hero = () => {
         }
       }
 
-      manager.startDeviceScan(null, null, (error, device) => {
-        if (error) {
-          console.error(error)
-          setModalMessage("Scan error.")
-          setIsScanning(false)
-          setModalVisible(true)
-          return
-        }
-        if (device) {
-          console.log(device)
-          setDevice(device)
-          manager.stopDeviceScan()
-          setIsScanning(false)
-          setModalMessage("Device found: " + device.name)
-          setModalVisible(true)
-        }
-      })
+      // For now, we'll just show the scanning modal
+      // Later we'll implement the actual Bluetooth scanning functionality
     }
+  }
+
+  const handleCancel = () => {
+    setIsScanning(false)
+    setModalVisible(false)
   }
 
   return (
@@ -81,19 +70,18 @@ const Hero = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Removed Footer Text */}
-
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
+      <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={handleCancel}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>{modalMessage}</Text>
-            <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
-              <Text style={styles.modalButtonText}>OK</Text>
+            <View style={styles.signalIcon}>
+              <Ionicons name="cellular" size={40} color="#1E88E5" />
+            </View>
+            <Text style={styles.modalTitle}>Scanning</Text>
+            <Text style={styles.modalText}>
+              for the microcontroller broadcast signal, please wait{"\n"}until the scanning is done.
+            </Text>
+            <TouchableOpacity style={styles.modalButton} onPress={handleCancel}>
+              <Text style={styles.modalButtonText}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -115,13 +103,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    marginTop: -40, // Adjust for logo position
+    marginTop: -40,
   },
   title: {
     fontSize: 48,
     fontWeight: "bold",
     color: "#1E88E5",
-    marginTop: 60, // Space for logo above
+    marginTop: 60,
   },
   description: {
     fontSize: 16,
@@ -137,7 +125,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 16,
     paddingHorizontal: 32,
-    borderRadius: 25, // More rounded corners to match design
+    borderRadius: 25,
     width: "100%",
     maxWidth: 300,
   },
@@ -152,7 +140,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-  //Removed Footer Style
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -161,28 +148,40 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 24,
     alignItems: "center",
     width: "80%",
     maxWidth: 320,
   },
+  signalIcon: {
+    marginBottom: 16,
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: "600",
+    color: "#1E88E5",
+    marginBottom: 12,
+  },
   modalText: {
     fontSize: 16,
     color: "#333333",
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 24,
+    lineHeight: 24,
   },
   modalButton: {
     backgroundColor: "#1E88E5",
     paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
+    paddingHorizontal: 32,
+    borderRadius: 25,
+    width: "100%",
   },
   modalButtonText: {
     color: "#FFFFFF",
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "600",
+    textAlign: "center",
   },
 })
 
