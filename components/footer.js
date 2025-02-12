@@ -4,22 +4,22 @@ import { View, Text, StyleSheet } from 'react-native';
 const Footer = () => {
   return (
     <View style={styles.footer}>
-      <Text style={styles.footerText}>© 2023 Salamin. All rights reserved.</Text>
+      <Text style={styles.footerText}>Search it, 2025. All Rights Reserved.</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   footer: {
-    marginTop: 'auto',
-    paddingBottom: 10,
-    // Remove textAlign from here as it's not effective for View components
+    backgroundColor: '#FFFFFF',
+    width: '100%',
+    paddingBottom: 20,
+    paddingTop: 10,
   },
   footerText: {
-    color: 'white',
+    color: '#666666',
     fontSize: 12,
-    opacity: 0.7,
-    textAlign: 'center', // Correctly apply textAlign to Text component
+    textAlign: 'center',
   },
 });
 

@@ -1,24 +1,27 @@
-import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet } from "react-native"
 
 const Navbar = () => {
   return (
     <View style={styles.navbar}>
-      <Image source={require('../assets/imgs/icons8-opera-glasses-96.png')} style={styles.logo} />
+      <Image source={require("../assets/imgs/logo.png")} style={styles.logo} resizeMode="contain" />
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   navbar: {
-    backgroundColor: 'transparent',
-    padding: 10,
-    alignItems: 'flex-start',
+    position: "absolute",
+    top: "25%",
+    width: "100%",
+    alignItems: "center",
+    zIndex: 1,
   },
   logo: {
     height: 40,
     width: 40,
+    marginBottom: 8,
   },
-});
+})
 
-export default Navbar;
+export default Navbar
+

@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.keithconerrr.glproximitydetection"
     },
     "web": {
       "bundler": "metro",
@@ -33,10 +34,19 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "react-native-ble-plx"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "2741b491-d068-45a1-bd30-d08793ebc3d9"
+      }
     }
   }
 }
