@@ -13,17 +13,14 @@ import {
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { BleManager } from "react-native-ble-plx"
-import { useNavigation } from "@react-navigation/native"
+import SearchActions from "./search-actions"
 
 const Hero = () => {
-  const navigation = useNavigation()
   const [manager] = useState(new BleManager())
   const [isScanning, setIsScanning] = useState(false)
-  const [isConnected, setIsConnected] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [successModalVisible, setSuccessModalVisible] = useState(false)
-  const [modalMessage, setModalMessage] = useState("")
-  const [device, setDevice] = useState(null)
+  const [showSearchActions, setShowSearchActions] = useState(false)
 
   const handleScan = async () => {
     if (!isScanning) {
@@ -35,7 +32,7 @@ const Hero = () => {
         if (!granted) {
           const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
           if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-            setModalMessage("Location permission denied.")
+            setIsScanning(false)
             return
           }
         }
@@ -44,6 +41,7 @@ const Hero = () => {
       // Simulate scanning for 4 seconds then show success
       setTimeout(() => {
         setModalVisible(false)
+        setShowSearchActions(true)
         setSuccessModalVisible(true)
       }, 4000)
     }
@@ -52,39 +50,40 @@ const Hero = () => {
   const handleCancel = () => {
     setIsScanning(false)
     setModalVisible(false)
+    setShowSearchActions(false)
   }
 
   const handleSuccess = () => {
-    console.log("Success Modal closed, navigating...");
-    setSuccessModalVisible(false);
-  
-    setTimeout(() => {
-      navigation.navigate("SearchActions");
-    }, 500);
-  };
-  
+    setSuccessModalVisible(false)
+  }
 
   return (
-    <View style={styles.hero}>
-      <View style={styles.content}>
-        <Text style={styles.title}>search it.</Text>
-        <Text style={styles.description}>Pair your device to perform search actions.</Text>
+    <View style={styles.container}>
+      {showSearchActions ? (
+        <SearchActions />
+      ) : (
+        <View style={styles.hero}>
+          <View style={styles.content}>
+            <Text style={styles.title}>search it.</Text>
+            <Text style={styles.description}>Pair your device to perform search actions.</Text>
 
-        <TouchableOpacity
-          style={[styles.button, isScanning && styles.buttonDisabled]}
-          onPress={handleScan}
-          disabled={isScanning}
-        >
-          {isScanning ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <>
-              <Ionicons name="bluetooth" size={20} color="white" style={styles.buttonIcon} />
-              <Text style={styles.buttonText}>Pair Device</Text>
-            </>
-          )}
-        </TouchableOpacity>
-      </View>
+            <TouchableOpacity
+              style={[styles.button, isScanning && styles.buttonDisabled]}
+              onPress={handleScan}
+              disabled={isScanning}
+            >
+              {isScanning ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <>
+                  <Ionicons name="bluetooth" size={20} color="white" style={styles.buttonIcon} />
+                  <Text style={styles.buttonText}>Pair Device</Text>
+                </>
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
 
       {/* Scanning Modal */}
       <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={handleCancel}>
@@ -126,9 +125,12 @@ const Hero = () => {
 }
 
 const styles = StyleSheet.create({
-  hero: {
+  container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
+  },
+  hero: {
+    flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,

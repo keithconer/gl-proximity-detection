@@ -1,19 +1,12 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native"
+import { Ionicons } from "@expo/vector-icons"
 
 const SearchActions = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Image
-          source={require("../assets/imgs/logo.png")}
-          style={styles.logo}
-          resizeMode="contain"
-        />
         <Text style={styles.title}>search it.</Text>
-        <Text style={styles.description}>
-          You may now perform search actions.
-        </Text>
+        <Text style={styles.description}>You may now perform search actions.</Text>
       </View>
 
       <View style={styles.actionButtons}>
@@ -33,23 +26,19 @@ const SearchActions = () => {
         </TouchableOpacity>
       </View>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    justifyContent: "space-between",
   },
   content: {
+    flex: 1,
     alignItems: "center",
-    paddingTop: 60,
-  },
-  logo: {
-    width: 40,
-    height: 40,
-    marginBottom: 8,
+    justifyContent: "center",
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 48,
@@ -68,15 +57,18 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     borderTopWidth: 1,
     borderTopColor: "#E0E0E0",
+    backgroundColor: "#FFFFFF",
   },
   actionButton: {
     alignItems: "center",
+    flex: 1,
   },
   actionText: {
     marginTop: 8,
     fontSize: 12,
     color: "#1E88E5",
   },
-});
+})
 
-export default SearchActions;
+export default SearchActions
+
