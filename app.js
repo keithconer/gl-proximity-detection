@@ -1,39 +1,24 @@
-import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, SafeAreaView, ScrollView } from 'react-native';
-import { useFonts } from 'expo-font';
-import { Ionicons, FontAwesome } from '@expo/vector-icons';
-import Hero from './components/hero';
-import Navbar from './components/navbar';
-import Footer from './components/footer';
+import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from "@react-navigation/native-stack"
+import Hero from "./components/hero"
+import SearchActions from "./components/search-actions"
+
+const Stack = createNativeStackNavigator()
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    'Righteous': require('./assets/fonts/Righteous-Regular.ttf'),
-    'StalinistOne': require('./assets/fonts/StalinistOne-Regular.ttf'),
-    'TIDOEmoji': require('./assets/fonts/TIDOEmoji.otf'),
-  });
-
-  if (!fontsLoaded) {
-    return null; // Wait for fonts to load
-  }
-
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.contentWrapper}>
-        <Navbar />
-        <Hero />
-        <Footer />
-      </ScrollView>
-    </SafeAreaView>
-  );
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerShown: false,
+          animation: "slide_from_right",
+        }}
+      >
+        <Stack.Screen name="Home" component={Hero} />
+        <Stack.Screen name="SearchActions" component={SearchActions} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1B1B1B',
-  },
-  contentWrapper: {
-    flexGrow: 1,
-  },
-});

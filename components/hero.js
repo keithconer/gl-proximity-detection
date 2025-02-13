@@ -13,12 +13,15 @@ import {
 } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { BleManager } from "react-native-ble-plx"
+import { useNavigation } from "@react-navigation/native"
 
 const Hero = () => {
+  const navigation = useNavigation()
   const [manager] = useState(new BleManager())
   const [isScanning, setIsScanning] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
+  const [successModalVisible, setSuccessModalVisible] = useState(false)
   const [modalMessage, setModalMessage] = useState("")
   const [device, setDevice] = useState(null)
 
@@ -38,8 +41,11 @@ const Hero = () => {
         }
       }
 
-      // For now, we'll just show the scanning modal
-      // Later we'll implement the actual Bluetooth scanning functionality
+      // Simulate scanning for 4 seconds then show success
+      setTimeout(() => {
+        setModalVisible(false)
+        setSuccessModalVisible(true)
+      }, 4000)
     }
   }
 
@@ -47,6 +53,16 @@ const Hero = () => {
     setIsScanning(false)
     setModalVisible(false)
   }
+
+  const handleSuccess = () => {
+    console.log("Success Modal closed, navigating...");
+    setSuccessModalVisible(false);
+  
+    setTimeout(() => {
+      navigation.navigate("SearchActions");
+    }, 500);
+  };
+  
 
   return (
     <View style={styles.hero}>
@@ -70,6 +86,7 @@ const Hero = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Scanning Modal */}
       <Modal animationType="fade" transparent={true} visible={modalVisible} onRequestClose={handleCancel}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -82,6 +99,24 @@ const Hero = () => {
             </Text>
             <TouchableOpacity style={styles.modalButton} onPress={handleCancel}>
               <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Success Modal */}
+      <Modal animationType="fade" transparent={true} visible={successModalVisible} onRequestClose={handleSuccess}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <View style={styles.successIcon}>
+              <Ionicons name="checkmark-circle" size={50} color="#1E88E5" />
+            </View>
+            <Text style={[styles.modalTitle, styles.successTitle]}>Paired Successfully</Text>
+            <Text style={styles.modalText}>
+              You are now connected to the{"\n"}microcontroller. You may now{"\n"}be able perform search actions.
+            </Text>
+            <TouchableOpacity style={styles.modalButton} onPress={handleSuccess}>
+              <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -182,6 +217,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     textAlign: "center",
+  },
+  successIcon: {
+    marginBottom: 16,
+  },
+  successTitle: {
+    fontSize: 28,
   },
 })
 

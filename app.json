@@ -16,7 +16,7 @@
         "foregroundImage": "./assets/imgs/logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.keithconerrr.glproximitydetection"
+      "package": "com.keithconerrr.searchit"
     },
     "web": {
       "bundler": "metro",
