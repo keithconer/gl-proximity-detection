@@ -20,7 +20,11 @@ const Hero = () => {
   const [isScanning, setIsScanning] = useState(false)
   const [modalVisible, setModalVisible] = useState(false)
   const [successModalVisible, setSuccessModalVisible] = useState(false)
+  const [disconnectModalVisible, setDisconnectModalVisible] = useState(false);
   const [showSearchActions, setShowSearchActions] = useState(false)
+  const [connectedDevice, setConnectedDevice] = useState(null);
+
+
 
   const handleScan = async () => {
     console.log("Starting BLE scan...");
@@ -74,14 +78,20 @@ const Hero = () => {
             setModalVisible(false);
             setSuccessModalVisible(true);
             setShowSearchActions(true);
-          } catch (err) {
-            console.error("Connection Failed:", err);
-            setIsScanning(false);
-            setModalVisible(false);
-          } 
-        }
-      });
-  
+         // Listen for disconnection
+         device.onDisconnected(() => {
+          console.log("ESP32 Disconnected!");
+          handleDisconnect();
+        });
+      } catch (err) {
+        console.error("Connection Failed:", err);
+        setIsScanning(false);
+        setModalVisible(false);
+      }
+    }
+  });
+
+
       setTimeout(() => {
         console.log("Scan timed out, stopping scan.");
         manager.stopDeviceScan();
@@ -89,6 +99,14 @@ const Hero = () => {
         setModalVisible(false);
       }, 10000);
     }
+  };
+
+   // Function to handle ESP32 disconnection
+   const handleDisconnect = () => {
+    setShowSearchActions(false);
+    setSuccessModalVisible(false);
+    setDisconnectModalVisible(true);
+    setConnectedDevice(null);
   };
   
 
@@ -143,6 +161,20 @@ const Hero = () => {
             </Text>
             <TouchableOpacity style={styles.modalButton} onPress={handleCancel}>
               <Text style={styles.modalButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+
+{/* Disconnection Modal */}
+      <Modal animationType="fade" transparent={true} visible={disconnectModalVisible} onRequestClose={() => setDisconnectModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Ionicons name="alert-circle" size={50} color="red" />
+            <Text style={[styles.modalTitle, { color: "red" }]}>Device Disconnected</Text>
+            <Text style={styles.modalText}>Connection lost. Please keep Bluetooth turned on.</Text>
+            <TouchableOpacity style={styles.modalButton} onPress={() => setDisconnectModalVisible(false)}>
+              <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>
           </View>
         </View>
