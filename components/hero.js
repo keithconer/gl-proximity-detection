@@ -23,29 +23,74 @@ const Hero = () => {
   const [showSearchActions, setShowSearchActions] = useState(false)
 
   const handleScan = async () => {
+    console.log("Starting BLE scan...");
+  
     if (!isScanning) {
-      setIsScanning(true)
-      setModalVisible(true)
-
+      setIsScanning(true);
+      setModalVisible(true);
+  
       if (Platform.OS === "android" && Platform.Version >= 23) {
-        const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-        if (!granted) {
-          const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
-          if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-            setIsScanning(false)
-            return
-          }
+        const granted = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+          PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT
+        ]);
+  
+        if (
+          granted["android.permission.ACCESS_FINE_LOCATION"] !== PermissionsAndroid.RESULTS.GRANTED ||
+          granted["android.permission.BLUETOOTH_SCAN"] !== PermissionsAndroid.RESULTS.GRANTED ||
+          granted["android.permission.BLUETOOTH_CONNECT"] !== PermissionsAndroid.RESULTS.GRANTED
+        ) {
+          console.log("Permissions denied");
+          setIsScanning(false);
+          setModalVisible(false);
+          return;
         }
       }
-
-      // Simulate scanning for 4 seconds then show success
+  
+      console.log("Permissions granted, scanning for ESP32...");
+  
+      manager.startDeviceScan(null, null, async (error, device) => {
+        if (error) {
+          console.error("Scan Error:", error);
+          setIsScanning(false);
+          setModalVisible(false);
+          return;
+        }
+  
+        if (device.name) console.log(`Found device: ${device.name}`);
+  
+        if (device.name === "ESP32-Locator") {
+          console.log("ESP32-Locator found, attempting to connect...");
+          manager.stopDeviceScan();
+  
+          try {
+            await device.connect();
+            console.log("Connected to ESP32!");
+  
+            await device.discoverAllServicesAndCharacteristics();
+            console.log("Services discovered!");
+  
+            setModalVisible(false);
+            setSuccessModalVisible(true);
+            setShowSearchActions(true);
+          } catch (err) {
+            console.error("Connection Failed:", err);
+            setIsScanning(false);
+            setModalVisible(false);
+          } 
+        }
+      });
+  
       setTimeout(() => {
-        setModalVisible(false)
-        setShowSearchActions(true)
-        setSuccessModalVisible(true)
-      }, 4000)
+        console.log("Scan timed out, stopping scan.");
+        manager.stopDeviceScan();
+        setIsScanning(false);
+        setModalVisible(false);
+      }, 10000);
     }
-  }
+  };
+  
 
   const handleCancel = () => {
     setIsScanning(false)
