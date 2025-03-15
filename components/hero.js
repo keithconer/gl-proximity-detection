@@ -171,8 +171,8 @@ const Hero = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Ionicons name="alert-circle" size={50} color="red" />
-            <Text style={[styles.modalTitle, { color: "red" }]}>Device Disconnected</Text>
-            <Text style={styles.modalText}>Connection lost. Please keep Bluetooth turned on.</Text>
+            <Text style={[styles.modalTitle, { color: "red" }]}>Connection Lost</Text>
+            <Text style={styles.modalText}>You have been disconnected due to distance limitations, ensure you are within the 10-15 meters distance away from the microcontroller and keep the bluetooth on.</Text>
             <TouchableOpacity style={styles.modalButton} onPress={() => setDisconnectModalVisible(false)}>
               <Text style={styles.modalButtonText}>Close</Text>
             </TouchableOpacity>
