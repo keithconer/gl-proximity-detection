@@ -67,28 +67,32 @@ const Hero = () => {
         if (device.name === "ESP32-Locator") {
           console.log("ESP32-Locator found, attempting to connect...");
           manager.stopDeviceScan();
-  
+        
           try {
             await device.connect();
             console.log("Connected to ESP32!");
-  
+        
             await device.discoverAllServicesAndCharacteristics();
             console.log("Services discovered!");
-  
+        
+            setConnectedDevice(device); // ✅ Set the connected device here
             setModalVisible(false);
             setSuccessModalVisible(true);
             setShowSearchActions(true);
-         // Listen for disconnection
-         device.onDisconnected(() => {
-          console.log("ESP32 Disconnected!");
-          handleDisconnect();
-        });
-      } catch (err) {
-        console.error("Connection Failed:", err);
-        setIsScanning(false);
-        setModalVisible(false);
-      }
-    }
+        
+            // Listen for disconnection
+            device.onDisconnected(() => {
+              console.log("ESP32 Disconnected!");
+              handleDisconnect();
+            });
+        
+          } catch (err) {
+            console.error("Connection Failed:", err);
+            setIsScanning(false);
+            setModalVisible(false);
+          }
+        }
+        
   });
 
 
@@ -123,7 +127,7 @@ const Hero = () => {
   return (
     <View style={styles.container}>
       {showSearchActions ? (
-        <SearchActions />
+        <SearchActions connectedDevice={connectedDevice} />
       ) : (
         <View style={styles.hero}>
           <View style={styles.content}>
