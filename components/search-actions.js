@@ -64,11 +64,6 @@ const SearchActions = ({ connectedDevice }) => {
 
       <View style={styles.actionButtons}>
         <TouchableOpacity style={styles.actionButton}>
-          <Ionicons name="camera" size={24} color="#1E88E5" />
-          <Text style={styles.actionText}>Camera</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.actionButton}>
           <Ionicons name="volume-high" size={24} color="#1E88E5" />
           <Text style={styles.actionText}>Buzzer</Text>
         </TouchableOpacity>
@@ -117,7 +112,7 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-evenly", // Ensures equal spacing like the reference image
     paddingVertical: 20,
     borderTopWidth: 1,
     borderTopColor: "#E0E0E0",
